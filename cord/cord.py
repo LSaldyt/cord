@@ -32,7 +32,7 @@ class Cord:
                         if command in self.commandTree:
                             self.commandTree[command](database, notifyClient, *args)
                         else:
-                            notifyClient.notify('Invalid command: {}'.format(command))
+                            print('Invalid command: {}'.format(command))
 
     def loop(self):
         notifyClient  = Notifier()
