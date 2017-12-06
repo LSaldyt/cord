@@ -1,7 +1,8 @@
 from __future__ import print_function
 import os, site
 
-package = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'packages')
+#package = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'packages')
+package = os.path.dirname(os.path.abspath(__file__))
 print(package)
 
 pathspec = r"""
