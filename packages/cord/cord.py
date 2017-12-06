@@ -14,27 +14,28 @@ class Cord:
     def __init__(self, commandTree):
         self.commandTree = commandTree
 
-    def respond(database, bittrexClient, notifyClient):
-        for message in notifyClient.client.messages.list():
-            if message.direction == 'inbound':
-                sent = message.date_sent
-                now  = datetime.datetime.utcnow()
-                today  = sent.day == now.day
-                hour   = sent.hour == now.hour
-                minute = abs(sent.minute - now.minute) < 2
-                if today and hour and minute and message.sid not in checked:
-                    checked.add(message.sid)
-                    command = message.body.strip().lower()
-                    print('Recieved command: {}'.format(command))
-                    if command in commandTree:
-                        commandTree[command](database, bittrexClient, notifyClient)
-                    else:
-                        notifyClient.notify('Invalid command: {}'.format(command))
+    def respond(self, database, notifyClient):
+        with retrieve(database, 'checked', set()) as checked:
+            for message in notifyClient.client.messages.list():
+                if message.direction == 'inbound':
+                    sent = message.date_sent
+                    now  = datetime.datetime.utcnow()
+                    today  = sent.day == now.day
+                    hour   = sent.hour == now.hour
+                    minute = abs(sent.minute - now.minute) < 2
+                    if today and hour and minute and message.sid not in checked:
+                        checked.add(message.sid)
+                        command = message.body.strip().lower()
+                        print('Recieved command: {}'.format(command))
+                        if command in self.commandTree:
+                            self.commandTree[command](database, notifyClient)
+                        else:
+                            notifyClient.notify('Invalid command: {}'.format(command))
 
     def save_data(self, database):
         pass
 
-    def loop(self, args):
+    def loop(self):
         notifyClient  = Notifier()
 
         datafile = '.data.pkl'
