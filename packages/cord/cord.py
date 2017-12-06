@@ -11,8 +11,9 @@ def retrieve(database, name, default):
     database[name] = element
 
 class Cord:
-    def __init__(self, commandTree):
+    def __init__(self, commandTree, save_data):
         self.commandTree = commandTree
+        self.save_data   = save_data
 
     def respond(self, database, notifyClient):
         with retrieve(database, 'checked', set()) as checked:
@@ -25,15 +26,12 @@ class Cord:
                     minute = abs(sent.minute - now.minute) < 2
                     if today and hour and minute and message.sid not in checked:
                         checked.add(message.sid)
-                        command = message.body.strip().lower()
+                        command, *args = message.body.strip().lower().split(' ')
                         print('Recieved command: {}'.format(command))
                         if command in self.commandTree:
-                            self.commandTree[command](database, notifyClient)
+                            self.commandTree[command](database, notifyClient, *args)
                         else:
                             notifyClient.notify('Invalid command: {}'.format(command))
-
-    def save_data(self, database):
-        pass
 
     def loop(self):
         notifyClient  = Notifier()
