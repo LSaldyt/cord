@@ -27,7 +27,7 @@ class Cord:
                     if today and hour and minute and message.sid not in checked:
                         checked.add(message.sid)
                         command, *args = message.body.strip().lower().split(' ')
-                        print('Recieved command: {}'.format(command))
+                        print('Recieved command: {} {}'.format(command, ' '.join(args)))
                         if command in self.commandTree:
                             self.commandTree[command](database, notifyClient, *args)
                         else:
