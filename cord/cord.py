@@ -11,9 +11,10 @@ def retrieve(database, name, default):
     database[name] = element
 
 class Cord:
-    def __init__(self, commandTree, save_data):
+    def __init__(self, commandTree, save_data, status):
         self.commandTree = commandTree
         self.save_data   = save_data
+        self.status      = status
 
     def respond(self, database, notifyClient):
         with retrieve(database, 'checked', set()) as checked:
@@ -49,6 +50,7 @@ class Cord:
                 while True:
                     self.save_data(database)
                     self.respond(database, notifyClient)
+                    self.status(database)
                     time.sleep(1)
                     print('.', end='', flush=True)
         finally:
