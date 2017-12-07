@@ -51,7 +51,7 @@ class Cord:
                     self.save_data(database)
                     self.respond(database, notifyClient)
                     self.status(database)
-                    time.sleep(1)
+                    time.sleep(.1)
                     print('.', end='', flush=True)
         finally:
             with open(datafile, 'wb') as outfile:
