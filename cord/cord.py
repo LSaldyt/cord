@@ -21,6 +21,9 @@ class Cord:
             for message in notifyClient.client.messages.list():
                 if message.direction == 'inbound':
                     sent = message.date_sent
+                    if sent is None:
+                        print('sent=None for {}'.format(message.body))
+                        continue
                     now  = datetime.datetime.utcnow()
                     today  = sent.day == now.day
                     hour   = sent.hour == now.hour
@@ -51,7 +54,7 @@ class Cord:
                     self.save_data(database)
                     self.respond(database, notifyClient)
                     self.status(database)
-                    time.sleep(.1)
+                    time.sleep(.01)
                     print('.', end='', flush=True)
         finally:
             with open(datafile, 'wb') as outfile:
